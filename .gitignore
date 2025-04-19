@@ -1,0 +1,5 @@
+# Ignore folder icon file
+Icon*
+
+# Ignore env file
+.env
