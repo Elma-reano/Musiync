@@ -5,4 +5,4 @@
 ### Music
 # Musiync
 
-$$ sin(x)=x $$
+$$µ sin(c) $$
