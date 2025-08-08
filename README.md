@@ -1,8 +1,6 @@
 #### Hey
 
 # Musiync
-## Sync
-### Music
-# Musiync
+WIP
 
 $$µ sin(c) $$
