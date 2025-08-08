@@ -5,7 +5,7 @@ Icon*
 .env
 
 # Ignore generated cache files
-.cache*
+*cache*
 
 # Ignore .DS_Store files
 .DS_Store

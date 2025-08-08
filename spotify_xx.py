@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Aug  2 21:41:38 2025
-Ian Annase's Spotipy Tutorial
-
-@author: marianoluna
+Based on Ian Annase's Spotipy Tutorial
 """
 
 import os
@@ -22,16 +20,27 @@ MY_SPOTIFY_USER_ID = os.getenv('MY_SPOTIFY_USER_ID')
 
 # get the username from terminal
 username = MY_SPOTIFY_USER_ID
+scope = 'user-library-read user-read-private user-read-playback-state user-modify-playback-state'
 
 # Prompt for user permission
 try:
-    token = util.prompt_for_user_token(username)
+    token = util.prompt_for_user_token(username, scope)
 except:
     os.remove(f".cache-{username}")
-    token = util.prompt_for_user_token(username)
+    token = util.prompt_for_user_token(username, scope)
     
 # Create our spotify object
 spotify_object = spotipy.Spotify(auth=token)
+
+# Get current device
+devices = spotify_object.devices()
+device_id = devices['devices'][0]['id']
+
+current_track = spotify_object.current_user_playing_track()
+if current_track:
+    current_track_artist = current_track['item']['artists'][0]['name']
+    current_track_name = track['item']['name']
+    print("Currently playing:", artist, '-', track, '\n')
 
 user = spotify_object.current_user()
 
@@ -101,6 +110,9 @@ while True:
                 song_selection = input("Enter a song number to see the album art (x to exit): ")
                 if song_selection.lower() == 'x':
                     break
+                track_selection_list = []
+                track_selection_list.append(track_uris[int(song_selection)])
+                spotify_object.start_playback(device_id, uris=track_selection_list)
                 webbrowser.open(track_art[int(song_selection)])
             
         case "1":
@@ -110,7 +122,7 @@ while True:
             
             # get search_results
             search_results = spotify_object.search(search_query,
-                                                   limit= 3,
+                                                   limit= 10,
                                                    offset= 0,
                                                    type= 'track',
                                                    )
