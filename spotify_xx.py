@@ -34,7 +34,8 @@ spotify_object = spotipy.Spotify(auth=token)
 
 # Get current device
 devices = spotify_object.devices()
-device_id = devices['devices'][0]['id']
+if devices['devices']:
+    device_id = devices['devices'][0]['id']
 
 current_track = spotify_object.current_user_playing_track()
 if current_track:
@@ -84,7 +85,7 @@ while True:
             
             track_uris = []
             track_art = []
-            z = 0
+            cont = 0
             
             # Extract album data
             album_results = spotify_object.artist_albums(artist_id)
@@ -100,10 +101,10 @@ while True:
                 track_results = track_results['items']
                 
                 for track in track_results:
-                    print(f"{z}: {track['name']}")
+                    print(f"{cont}: {track['name']}")
                     track_uris.append(track['uri'])
                     track_art.append(album_art)
-                    z += 1
+                    cont += 1
             
             # See album art
             while True:

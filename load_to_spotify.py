@@ -13,6 +13,8 @@ import pandas as pd
 from dotenv import load_dotenv
 load_dotenv()
 
+from spotify_functs import get_playlist_tracks, get_playlists_by_name
+
 MY_SPOTIFY_USER_ID = os.getenv('MY_SPOTIFY_USER_ID')
 
 
@@ -28,32 +30,17 @@ except:
 
 sp = spotipy.Spotify(auth= token)
 
-playlists = sp.user_playlists(MY_SPOTIFY_USER_ID)
-playlists = playlists['items']
+names = ['2019 [Géneros Variados]', '2020', '2021', '2022', '2023']
+playlists = get_playlists_by_name(username, names, spotify_object= sp)
 
-
-
-user_playlists_search = sp.user_playlists(username, limit= 100)
-playlists = user_playlists_search['items']
-
-while True:
-    if user_playlists_search['next']:
-        user_playlists_search = sp.next(user_playlists_search['next'])
-        playlists += user_playlists_search['items']
-        continue
-    break
 
 void = next((p for p in playlists if p['name'] == "ElmaReano's Void"))
 void_id = void['id']
+void_tracks = sp.user_playlist_tracks(username, playlist_id= void_id)
 
 p2023 = next((p for p in playlists if p['name'] == '2023'))
 p2023_tracks = sp.user_playlist_tracks(username, p2023['id'])
-p2023_tracks = [{'name': x['track']['name'],
-                 'id': x['track']['id'],
-                 'album': x['track']['album']['name'],
-                 'artist': x['track']['artists'][0]['name']
-                 } for x in p2023_tracks['items']
-                ]
+p2023_tracks = get_playlist_tracks(p2023_tracks)
 
 
 # void = [_ for _ in filter(lambda x: x['name'] == "ElmaReanos's Void", playlists)]
