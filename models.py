@@ -20,7 +20,7 @@ class Song(Base):
     name = Column(String(128))
     album = Column(String(128))
     artist_id = Column(Integer, ForeignKey('artists.id'))
-    spotify_id = Column(String(64))
+    spotify_id = Column(String(64), unique= True)
     
     artist = relationship('Artist', back_populates= 'songs')
     
@@ -36,7 +36,7 @@ class Artist(Base):
     
     id = Column(Integer, Sequence('user_id_seq'), primary_key = True)
     name = Column(String(128))
-    spotify_id = Column(String(64))
+    spotify_id = Column(String(64), unique= True)
     
     songs = relationship('Song', back_populates= 'artist')
     
