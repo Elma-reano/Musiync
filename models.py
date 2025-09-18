@@ -6,15 +6,17 @@ Created on Mon Aug 11 16:53:49 2025
 @author: marianoluna
 """
 
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, Sequence
 from sqlalchemy.orm import declarative_base, relationship
+
+DB_URL = "sqlite:///database.db"
 
 Base = declarative_base()
 
 class Song(Base):
     __tablename__ = 'songs'
     
-    id = Column(Integer, primary_key = True)
+    id = Column(Integer, Sequence('user_id_seq'), primary_key = True)
     name = Column(String(128))
     album = Column(String(128))
     artist_id = Column(Integer, ForeignKey('artists.id'))
@@ -32,16 +34,26 @@ class Song(Base):
 class Artist(Base):
     __tablename__ = 'artists'
     
-    id = Column(Integer, primary_key = True)
+    id = Column(Integer, Sequence('user_id_seq'), primary_key = True)
     name = Column(String(128))
     spotify_id = Column(String(64))
     
     songs = relationship('Song', back_populates= 'artist')
     
+
+    def __repr__(self):
+        return f"<Artist(id={self.id!r}, name={self.name!r}, spotify_id={self.spotify_id!r}>"
+    
+    def __str__(self):
+        return f"{self.name}"
+    
+def get_engine():
+    from sqlalchemy import create_engine
+    return create_engine(DB_URL, echo= True, future= True)
+    
 if __name__ == '__main__':
     
-    from sqlalchemy import create_engine
-    engine = create_engine("sqlite:///database.db", echo=True, future=True)
+    engine = get_engine()
     Base.metadata.create_all(engine)
     
     
