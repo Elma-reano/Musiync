@@ -10,6 +10,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String, Sequence
 from sqlalchemy.orm import declarative_base, relationship
 
 DB_URL = "sqlite:///database.db"
+# AIO_DB_URL = "sqlite+aiosqlite:///database.db"
 
 Base = declarative_base()
 
@@ -50,6 +51,10 @@ class Artist(Base):
 def get_engine():
     from sqlalchemy import create_engine
     return create_engine(DB_URL, echo= True, future= True)
+
+# def get_async_engine():
+#     from sqlalchemy.ext.asyncio import create_async_engine
+#     return create_async_engine(DB_URL, echo=True, future= True)
     
 if __name__ == '__main__':
     

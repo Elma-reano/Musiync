@@ -80,13 +80,22 @@ def add_song_data(session,
                         artist= Artist,
                         spotify_id= spotify_id)
         session.add(new_song)
+    else:
+        print("Song found: {song!r}")
+        if not song.spotify_id and spotify_id:
+            print("Updating song's spotify_id")
+            song.spotify_id = spotify_id
         
 def get_song_database(session) -> pd.DataFrame:
     if not session:
         raise Exception("Error. No session was provided")
     
+    # TODO decidirme por qué devolver
+    # Si devolver el objeto del artista, el id y nombre, qué 
     result = session.execute(
-        select(Song.id, Song.name, Song.album, Song.artist_id, Song.spotify_id)
+        select(Song.id, Song.name, Song.album, 
+               Song.artist_id, Artist, Artist.name.label("artist"), 
+               Song.spotify_id)
         ).mappings().all()
     df = pd.DataFrame(result)
     df['modified'] = False
